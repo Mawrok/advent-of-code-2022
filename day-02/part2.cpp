@@ -6,7 +6,7 @@ int main() {
 	while (std::cin >> enemyChoice >> result) {
 		enemyChoice  -= 'A';
 		result -= 'X';
-		playerChoice = (3 + enemyChoice + result - 1) % 3; 
+		playerChoice = (2 + enemyChoice + result) % 3; 
 		score += 3 * result + playerChoice + 1;
 	}
 	std::cout << score << "\n";
