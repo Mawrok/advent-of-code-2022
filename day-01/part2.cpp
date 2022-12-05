@@ -14,7 +14,7 @@ int main() {
 		} else {
 			calories += std::stoi(line);
 		}
-  }
+    }
 	auto three = vec.begin() + 3;
 	std::ranges::nth_element(vec, three, std::ranges::greater{});
 	std::cout << std::accumulate(vec.begin(), three, 0) << "\n"; 
