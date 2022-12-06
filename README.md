@@ -7,8 +7,8 @@ My solutions for [Advent of Code 2022](https://adventofcode.com/2022/) in C++23
 |  1  | [Calorie Counting][1]        |
 |  2  | [Rock Paper Scissors][2]     |
 |  3  | [Rucksack Reorganization][3] |
-|  4  | [Camp Cleanup][4]            |
-|  5  | [Supply Stacks][5]           |
+|  4  | Camp Cleanup            |
+|  5  | Supply Stacks           |
 |  6  | [Tuning Trouble][6]          |
 
 ## Solutions
