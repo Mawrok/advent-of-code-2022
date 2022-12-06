@@ -82,18 +82,18 @@ int main() {
 #include <cctype>
 
 int main() {
-  std::string backpack;
-  int sum{};
-  while (std::cin >> backpack) {
-    std::string intersection;
-    auto half = backpack.begin() + backpack.size() / 2;
-    std::sort(backpack.begin(), half);
-    std::sort(half, backpack.end());
-    std::set_intersection(backpack.begin(), half, half, backpack.end(), std::back_inserter(intersection));
-    char chr = intersection.front();
-    sum += std::islower(chr) ? chr - 'a' + 1 : chr - 'A' + 27;
-  }
-  std::cout << sum << "\n";
+    std::string backpack;
+    int sum{};
+    while (std::cin >> backpack) {
+        std::string intersection;
+        auto half = backpack.begin() + backpack.size() / 2;
+        std::sort(backpack.begin(), half);
+        std::sort(half, backpack.end());
+        std::set_intersection(backpack.begin(), half, half, backpack.end(), std::back_inserter(intersection));
+        char chr = intersection.front();
+        sum += std::islower(chr) ? chr - 'a' + 1 : chr - 'A' + 27;
+    }
+    std::cout << sum << "\n";
 }
 ```
 #### Part 2
@@ -104,18 +104,18 @@ int main() {
 #include <cctype>
 
 int main() {
-  std::string backpack1, backpack2, backpack3;
-  int sum{};
-  while (std::cin >> backpack1 >> backpack2 >> backpack3) {
-    using namespace std::ranges;
-    std::string intersect, result;
-    sort(backpack1); sort(backpack2); sort(backpack3);
-    set_intersection(backpack1, backpack2, std::back_inserter(intersect));
-    set_intersection(intersect, backpack3, std::back_inserter(result));
-    char chr = result.front();
-    sum += std::islower(chr) ? chr - 'a' + 1 : chr - 'A' + 27;
-  }
-  std::cout << sum << "\n";
+    std::string backpack1, backpack2, backpack3;
+    int sum{};
+    while (std::cin >> backpack1 >> backpack2 >> backpack3) {
+        using namespace std::ranges;
+        std::string intersect, result;
+        sort(backpack1); sort(backpack2); sort(backpack3);
+        set_intersection(backpack1, backpack2, std::back_inserter(intersect));
+        set_intersection(intersect, backpack3, std::back_inserter(result));
+        char chr = result.front();
+        sum += std::islower(chr) ? chr - 'a' + 1 : chr - 'A' + 27;
+    }
+    std::cout << sum << "\n";
 }
 ```
 ---
