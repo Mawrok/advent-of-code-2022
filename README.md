@@ -86,10 +86,10 @@ int main() {
     int sum{};
     while (std::cin >> backpack) {
         std::string intersection;
-        auto half = backpack.begin() + backpack.size() / 2;
-        std::sort(backpack.begin(), half);
-        std::sort(half, backpack.end());
-        std::set_intersection(backpack.begin(), half, half, backpack.end(), std::back_inserter(intersection));
+        auto mid = backpack.begin() + backpack.size() / 2;
+        std::sort(backpack.begin(), mid);
+        std::sort(mid, backpack.end());
+        std::set_intersection(backpack.begin(), mid, mid, backpack.end(), std::back_inserter(intersection));
         char chr = intersection.front();
         sum += std::islower(chr) ? chr - 'a' + 1 : chr - 'A' + 27;
     }
