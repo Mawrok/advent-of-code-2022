@@ -176,7 +176,7 @@ int main() {
     int update_size = 30'000'000;
     int occupied_size = dir_size["/"];
 
-    int minimal_capacity = update_size - disk_size + occupied_size;
+    int minimal_capacity = update_size + occupied_size - disk_size;
     int min = std::ranges::min(std::views::filter(values, std::bind_back(std::greater{}, minimal_capacity)));
     std::cout << min << '\n';
 }
