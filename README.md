@@ -2,14 +2,15 @@
 
 My solutions for [Advent of Code 2022](https://adventofcode.com/2022/) in C++23
 
-| Day |            Quest             |
-| :-: | :--------------------------: |
-|  1  | [Calorie Counting][1]        |
-|  2  | [Rock Paper Scissors][2]     |
-|  3  | [Rucksack Reorganization][3] |
-|  4  | Camp Cleanup            |
-|  5  | Supply Stacks           |
-|  6  | [Tuning Trouble][6]          |
+| Day |            Quest                     |
+| :-: | :----------------------------------: |
+|  1  | [Calorie Counting][1]                |
+|  2  | [Rock Paper Scissors][2]             |
+|  3  | [Rucksack Reorganization][3]         |
+|  4  | Camp Cleanup                         |
+|  5  | Supply Stacks                        |
+|  6  | [Tuning Trouble][6]                  |
+|  7  | [No Space Left On Device Trouble][7] |
 
 ## Solutions
 ### Day 1: 
@@ -143,6 +144,48 @@ int main() {
 }    
 ```
 ---
+### Day 7
+```cpp
+#include <iostream>     
+#include <ranges> 
+#include <string> 
+#include <algorithm> 
+#include <vector> 
+#include <unordered_map>
+#include <functional> 
+
+int main() {
+    std::unordered_map<std::string, int> dir_size;
+    std::vector<std::string> dirs_stack;
+    
+    for (std::string line; std::getline(std::cin, line);) {
+        if (line.starts_with("$ cd ..")) {
+            dirs_stack.pop_back();
+        } else if (line.starts_with("$ cd")) {
+            dirs_stack.push_back(line.substr(5));
+        } else if (line.front() != '$' and not line.starts_with("dir")) {
+            int filesize = std::stoi(line.substr(0, line.find(' ')));
+            for (std::string path; auto dir : dirs_stack) {
+                dir_size[path += dir] += filesize;
+            }
+        }
+    }
+
+    auto values = std::views::values(dir_size);
+
+    auto sum = std::ranges::fold_left(std::views::filter(values, std::bind_back(std::less{}, 100'000)), 0, std::plus{});
+    std::cout << sum << "\n";
+    
+    int disk_size = 70'000'000;
+    int update_size = 30'000'000;
+    int occupied_size = dir_size["/"];
+
+    int minimal_capacity = update_size - disk_size + occupied_size;
+    auto min = std::ranges::min(std::views::filter(values, std::bind_back(std::greater{}, minimal_capacity)));
+    std::cout << min << '\n';
+}
+```
+---
 ### How to pipe
 ```
 < input.txt > output.txt
@@ -154,3 +197,4 @@ int main() {
 
 
 [6]: #day-6
+[7]: #day-7
