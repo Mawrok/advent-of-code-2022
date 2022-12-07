@@ -154,22 +154,18 @@ int main() {
 #include <unordered_map>
 #include <functional> 
 
-int main() {
+int main() { 
     std::unordered_map<std::string, int> dir_size;
     std::vector<std::string> dirs_stack;
     
-    for (std::string line; std::getline(std::cin, line);) {
-        if (line.starts_with("$ cd ..")) {
+    for (std::string line, path; std::getline(std::cin, line); path.clear())
+        if (line.starts_with("$ cd .."))
             dirs_stack.pop_back();
-        } else if (line.starts_with("$ cd")) {
+        else if (line.starts_with("$ cd"))
             dirs_stack.push_back(line.substr(5));
-        } else if (line.front() != '$' and not line.starts_with("dir")) {
-            int filesize = std::stoi(line.substr(0, line.find(' ')));
-            for (std::string path; auto dir : dirs_stack) {
-                dir_size[path += dir] += filesize;
-            }
-        }
-    }
+        else if (line.front() != '$' and not line.starts_with("dir"))
+            for (auto size = std::stoi(line.substr(0, line.find(' '))); auto& dir : dirs_stack)
+                dir_size[path += dir] += size;
 
     auto values = std::views::values(dir_size);
 
