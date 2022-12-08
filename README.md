@@ -169,7 +169,8 @@ int main() {
 
     auto values = std::views::values(dir_size);
 
-    int sum = std::ranges::fold_left(std::views::filter(values, std::bind_back(std::less{}, 100'000)), 0, std::plus{});
+    int sum = std::ranges::fold_left(
+        std::views::filter(values, std::bind_back(std::less{}, 100'000)), 0, std::plus{});
     std::cout << sum << "\n";
     
     int disk_size = 70'000'000;
@@ -177,7 +178,8 @@ int main() {
     int occupied_size = dir_size["/"];
 
     int minimal_capacity = update_size + occupied_size - disk_size;
-    int min = std::ranges::min(std::views::filter(values, std::bind_back(std::greater{}, minimal_capacity)));
+    int min = std::ranges::min(
+        std::views::filter(values, std::bind_back(std::greater{}, minimal_capacity)));
     std::cout << min << '\n';
 }
 ```
