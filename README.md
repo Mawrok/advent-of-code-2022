@@ -12,6 +12,7 @@ My solutions for [Advent of Code 2022](https://adventofcode.com/2022/) in C++23
 |  6  | [Tuning Trouble][6]                  |
 |  7  | [No Space Left On Device Trouble][7] |
 |  8  | [Treetop Tree House][8]              |
+|  9  | [Rope Bridge][9]                     |
 
 ## Solutions
 ### Day 1: 
@@ -237,6 +238,62 @@ int main() {
 }
 ```
 ---
+### Day 9
+```cpp
+#include <iostream>
+#include <cmath>
+#include <set>
+#include <vector>
+#include <map>
+
+struct Vector2 { 
+    auto operator< (Vector2 const& other) const { return (1000 * x + y) < (1000 * other.x + other.y); }
+    int x{}, y{};
+};
+
+int sgn(int x) { return (x > 0) - (x < 0); }
+
+int main() {
+    const std::map<char, Vector2> directions {
+        {'L', {-1, 0}},
+        {'R', { 1, 0}},
+        {'U', {0, -1}},
+        {'D', {0, 1}}
+    };
+
+    std::set<Vector2> traceTail;
+    std::set<Vector2> traceOneAfrerHead;
+
+    std::vector<Vector2> rope(10);
+
+    char charDir;
+    int moves;
+    while (std::cin >> charDir >> moves) {
+        auto dir = directions.at(charDir);
+        while (moves--) {
+            auto& head = rope[0];
+            head.x += dir.x;
+            head.y += dir.y;
+            for (int i = 1; i < rope.size(); ++i) {
+                int dx = rope[i - 1].x - rope[i].x;
+                int dy = rope[i - 1].y - rope[i].y;
+                if (std::abs(dx) != 2 and std::abs(dy) != 2) {
+                    break;
+                }
+                rope[i].x += sgn(dx);
+                rope[i].y += sgn(dy);
+            }
+
+            traceOneAfrerHead.insert(rope[1]);
+            traceTail.insert(rope.back());
+        }
+    }
+
+    std::cout << traceOneAfrerHead.size() << "\n";
+    std::cout << traceTail.size() << "\n";
+}
+```
+---
 ### How to pipe
 ```
 < input.txt > output.txt
@@ -250,3 +307,4 @@ int main() {
 [6]: #day-6
 [7]: #day-7
 [8]: #day-8
+[9]: #day-9
