@@ -262,7 +262,7 @@ int main() {
     };
 
     std::set<Vector2> traceTail;
-    std::set<Vector2> traceOneAfrerHead;
+    std::set<Vector2> traceOneAfterHead;
 
     std::vector<Vector2> rope(10);
 
@@ -284,12 +284,12 @@ int main() {
                 rope[i].y += sgn(dy);
             }
 
-            traceOneAfrerHead.insert(rope[1]);
+            traceOneAfterHead.insert(rope[1]);
             traceTail.insert(rope.back());
         }
     }
 
-    std::cout << traceOneAfrerHead.size() << "\n";
+    std::cout << traceOneAfterHead.size() << "\n";
     std::cout << traceTail.size() << "\n";
 }
 ```
