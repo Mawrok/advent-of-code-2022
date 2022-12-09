@@ -201,8 +201,8 @@ class ForestView {
 public:
     ForestView(std::string_view sv) :data(sv), width(std::sqrt(sv.size())) {}
 
-    auto rows(size_t i) { return data | std::views::drop(i / width * width) | std::views::take(width); }
-    auto cols(size_t i) { return data | std::views::drop(i % width) | std::views::stride(width); }
+    auto rows(std::size_t i) { return data | std::views::drop(i / width * width) | std::views::take(width); }
+    auto cols(std::size_t i) { return data | std::views::drop(i % width) | std::views::stride(width); }
 
     auto left(std::size_t i) { return rows(i) | std::views::take(i % width) | std::views::reverse; }
     auto right(std::size_t i) { return rows(i) | std::views::drop(1 + i % width); }
