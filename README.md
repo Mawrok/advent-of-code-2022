@@ -194,7 +194,6 @@ int main() {
 #include <utility>
 #include <string>
 #include <functional>
-#include <chrono>
 
 class ForestView {
     std::string_view data;
