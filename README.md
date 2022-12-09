@@ -223,7 +223,7 @@ int main() {
     std::size_t count{}, max{};
     ForestView forest{ data };
 
-    for (int i : std::views::iota(0uz, data.size())) {
+    for (auto i : std::views::iota(0uz, data.size())) {
         auto [visibility1, score1] = rate_position(forest.left(i), data[i]);
         auto [visibility2, score2] = rate_position(forest.right(i), data[i]);
         auto [visibility3, score3] = rate_position(forest.up(i), data[i]);
