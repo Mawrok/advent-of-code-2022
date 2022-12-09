@@ -211,7 +211,7 @@ public:
 };
 
 template <typename T>
-auto rate_position(T trees, int value) {
+auto rate_position(T trees, char value) {
     auto it = std::ranges::find_if(trees, std::bind_back(std::greater_equal{}, value));
     bool visibility = it == trees.end();
     std::size_t scenic_score = 1 + std::distance(trees.begin(), it) - visibility;
