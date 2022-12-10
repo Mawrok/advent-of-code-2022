@@ -308,7 +308,6 @@ int main() {
 #include <iostream>
 #include <cmath>
 #include <unordered_set>
-#include <unordered_map>
 #include <vector>
 #include <ranges>
 
@@ -340,8 +339,7 @@ int main() {
     int moves;
     while (std::cin >> direction >> moves) {
         while (moves--) {
-            auto& head = rope[0];
-            move(head, direction);
+            move(rope.front(), direction);
             for (auto [prev, next] : rope | std::views::pairwise) {
                 follow(prev, next);
             }
