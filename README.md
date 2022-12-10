@@ -342,7 +342,7 @@ int main() {
         while (moves--) {
             auto& head = rope[0];
             move(head, direction);
-            for (auto [prev, next] : rope | std::views::slide(2)) {
+            for (auto [prev, next] : rope | std::views::pairwise) {
                 follow(prev, next);
             }
             traceOneAfterHead.insert(rope[1].hash());
