@@ -122,6 +122,49 @@ int main() {
     std::cout << sum << "\n";
 }
 ```
+### Part 1 + 2 = 4
+```cpp
+#include <iostream>
+#include <string>
+#include <ranges>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <cctype>
+
+auto intersects(std::ranges::range auto v) {
+    std::string tmp;
+    std::string acc{ v[0] };
+    std::ranges::sort(acc);
+    for (auto next : v | std::views::drop(1)) {
+        tmp.clear();
+        std::ranges::sort(next);
+        std::ranges::set_intersection(acc, next, std::back_inserter(tmp));
+        std::swap(acc, tmp);
+    }
+    return acc.front();
+}
+
+int value(std::ranges::view auto backsacks) {
+    auto value = [](auto chr) {return std::islower(chr) ? chr - 'a' + 1 : chr - 'A' + 27; };
+    auto transformed = backsacks
+        | std::views::transform([](auto c) {return intersects(c); })
+        | std::views::transform(value);
+    return std::ranges::fold_left(transformed, 0, std::plus{});
+}
+
+int main() {
+    auto data = std::views::istream<std::string>(std::cin) | std::ranges::to<std::vector>();
+
+    auto chunk3 = data | std::views::chunk(3);
+    auto halves = [](std::string s) { 
+        return std::vector{ s.substr(0, s.size() / 2u), s.substr(s.size() / 2u) };};
+    auto halved = data | std::views::transform(halves);
+
+    std::cout << value(halved) << "\n";
+    std::cout << value(chunk3) << "\n";
+}
+```
 ---
 ### Day 5
 ```cpp
