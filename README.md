@@ -307,50 +307,53 @@ int main() {
 ```cpp
 #include <iostream>
 #include <cmath>
-#include <set>
+#include <unordered_set>
 #include <vector>
 #include <map>
+#include <ranges>
+#include <tuple>
 
-struct Vector2 { 
-    auto operator< (Vector2 const& other) const { return (1000 * x + y) < (1000 * other.x + other.y); }
+struct Vector2 {
+    long hash() { return 1000 * x + y; }
     int x{}, y{};
 };
 
 int sgn(int x) { return (x > 0) - (x < 0); }
 
+void follow(Vector2& prev, Vector2& next) {
+    auto dx = prev.x - next.x, dy = prev.y - next.y;
+    bool move = std::abs(dx) == 2 or std::abs(dy) == 2;
+    next.x += move * sgn(dx);
+    next.y += move * sgn(dy);
+}
+
 int main() {
-    const std::map<char, Vector2> directions {
+    std::vector<Vector2> rope(10);
+    const std::map<char, Vector2> directions{
         {'L', {-1, 0}},
         {'R', { 1, 0}},
         {'U', {0, -1}},
         {'D', {0, 1}}
     };
 
-    std::set<Vector2> traceTail;
-    std::set<Vector2> traceOneAfterHead;
-
-    std::vector<Vector2> rope(10);
+    std::unordered_set<long> traceTail;
+    std::unordered_set<long> traceOneAfterHead;
 
     char charDir;
     int moves;
+
     while (std::cin >> charDir >> moves) {
         auto dir = directions.at(charDir);
         while (moves--) {
             auto& head = rope[0];
             head.x += dir.x;
             head.y += dir.y;
-            for (int i = 1; i < rope.size(); ++i) {
-                int dx = rope[i - 1].x - rope[i].x;
-                int dy = rope[i - 1].y - rope[i].y;
-                if (std::abs(dx) != 2 and std::abs(dy) != 2) {
-                    break;
-                }
-                rope[i].x += sgn(dx);
-                rope[i].y += sgn(dy);
+            for (auto [prev, next] : rope | std::views::pairwise) {
+                follow(prev, next);
             }
 
-            traceOneAfterHead.insert(rope[1]);
-            traceTail.insert(rope.back());
+            traceOneAfterHead.insert(rope[1].hash());
+            traceTail.insert(rope.back().hash());
         }
     }
 
