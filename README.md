@@ -13,6 +13,7 @@ My solutions for [Advent of Code 2022](https://adventofcode.com/2022/) in C++23
 |  7  | [No Space Left On Device Trouble][7] |
 |  8  | [Treetop Tree House][8]              |
 |  9  | [Rope Bridge][9]                     |
+|  10 | [Cathode-Ray Tube][10]               |
 
 ## Solutions
 ### Day 1: 
@@ -353,6 +354,46 @@ int main() {
 }
 ```
 ---
+### Day 10
+```cpp
+#include <iostream>
+#include <string>
+#include <ranges>
+#include <iterator>
+#include <algorithm>
+
+struct Computer {
+    std::string screen;
+    int x = 1, acc = 0, it = 0;
+
+    void cycle() {
+        if ((it + 21) % 40 == 0)
+            acc += (it + 1) * x;   
+        screen.append(1, std::abs(x - it % 40) < 2 ? '#' : '.');
+        it++;
+    }
+};
+
+int main() {
+    Computer comp;
+    for (std::string line; std::getline(std::cin, line);) {
+        if (line == "noop") {
+            comp.cycle();
+        } else {
+            comp.cycle();
+            comp.cycle();
+            comp.x += std::stoi(line.substr(line.rfind(' ')));
+        }
+    }
+
+    std::cout << comp.acc << "\n";
+    for (auto row : comp.screen | std::views::chunk(40)) {
+        std::ostream_iterator<char> out(std::cout << "\n");
+        std::ranges::copy(row, out);
+    }
+}
+```
+---
 ### How to pipe
 ```
 < input.txt > output.txt
@@ -367,3 +408,4 @@ int main() {
 [7]: #day-7
 [8]: #day-8
 [9]: #day-9
+[10]: #day-10
