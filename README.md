@@ -314,7 +314,7 @@ int main() {
 #include <tuple>
 
 struct Vector2 {
-    long hash() { return 1000 * x + y; }
+    long hash() { return 1000l * x + y; }
     int x{}, y{};
 };
 
