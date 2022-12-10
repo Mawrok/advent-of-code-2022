@@ -361,6 +361,7 @@ int main() {
 #include <ranges>
 #include <iterator>
 #include <algorithm>
+#include <cmath>
 
 struct Computer {
     std::string screen;
