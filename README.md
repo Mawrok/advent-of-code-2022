@@ -308,13 +308,12 @@ int main() {
 #include <iostream>
 #include <cmath>
 #include <unordered_set>
+#include <unordered_map>
 #include <vector>
-#include <map>
 #include <ranges>
-#include <tuple>
 
 struct Vector2 {
-    long hash() { return 1000l * x + y; }
+    long hash() { return 1000l * x + y; } 
     int x{}, y{};
 };
 
@@ -327,31 +326,25 @@ void follow(Vector2& prev, Vector2& next) {
     next.y += move * sgn(dy);
 }
 
+void move(Vector2& pos, char dir) {
+    pos.x += (dir == 'R') - (dir == 'L');
+    pos.y += (dir == 'U') - (dir == 'D');
+}
+
 int main() {
     std::vector<Vector2> rope(10);
-    const std::map<char, Vector2> directions{
-        {'L', {-1, 0}},
-        {'R', { 1, 0}},
-        {'U', {0, -1}},
-        {'D', {0, 1}}
-    };
-
     std::unordered_set<long> traceTail;
     std::unordered_set<long> traceOneAfterHead;
 
-    char charDir;
+    char direction;
     int moves;
-
-    while (std::cin >> charDir >> moves) {
-        auto dir = directions.at(charDir);
+    while (std::cin >> direction >> moves) {
         while (moves--) {
             auto& head = rope[0];
-            head.x += dir.x;
-            head.y += dir.y;
-            for (auto [prev, next] : rope | std::views::pairwise) {
+            move(head, direction);
+            for (auto [prev, next] : rope | std::views::slide(2)) {
                 follow(prev, next);
             }
-
             traceOneAfterHead.insert(rope[1].hash());
             traceTail.insert(rope.back().hash());
         }
