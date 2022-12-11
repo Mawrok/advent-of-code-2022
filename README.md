@@ -442,6 +442,7 @@ int main() {
 #include <vector>
 #include <functional>
 #include <cinttypes>
+#include "utils.h"
 using int_t = std::uint64_t;
 using func_t = std::function<int_t(int_t)>;
 using func_bt = std::function<int_t(int_t, int_t)>;
@@ -450,8 +451,49 @@ struct Monkey {
     std::vector<int_t> items;
     func_t operation;
     int_t divisor;
-    std::size_t target1{};
-    std::size_t target2{};
+    std::size_t target1;
+    std::size_t target2;
+    std::size_t inspections{};
+
+    std::size_t choosing_catcher(int_t worry_level) {
+        return worry_level % divisor == 0 ? target1 : target2; 
+    }
+
+    int_t inspect(int_t item) { 
+        return ++inspections, operation(item); 
+    }
+
+    void throwing() { items.clear(); }
+};
+
+struct MonkeysPack {
+    std::vector<Monkey> monkeys;
+    std::vector<int_t> inspections;
+    std::vector<int_t> max2;
+    func_t reduce;
+
+    MonkeysPack(std::vector<Monkey>& data, func_t&& func) 
+        :monkeys(data), max2(2), inspections(data.size()), reduce(func) {}
+
+    int_t monkey_business(int rounds) {
+        while (rounds--)
+            perform_round();
+
+        std::ranges::transform(monkeys, inspections.begin(), &Monkey::inspections);
+        std::ranges::partial_sort_copy(inspections, max2, std::greater{});
+        return std::ranges::fold_left(max2, int_t{1}, std::multiplies{});;
+    }
+
+    void perform_round() {
+        for (auto& monkey : monkeys) {
+            for (auto& item : monkey.items) {
+                auto worry_level = reduce(monkey.inspect(item));
+                auto catcher = monkey.choosing_catcher(worry_level);
+                monkeys[catcher].items.push_back(worry_level);
+            }
+            monkey.throwing();
+        }
+    }
 };
 
 auto split(std::string s_nums) {
@@ -477,34 +519,12 @@ func_t op_parse(std::string str) {
         return std::bind(op, _1, std::stoi(rhs));
 }
 
-void perform_round(std::vector<Monkey>& monkeys, std::vector<int_t>& inspecting, func_t& transform) {
-    std::size_t monkey_id = 0;
-    for (auto& monkey : monkeys) {
-        for (auto& item : monkey.items) {
-            auto worry_level = transform(monkey.operation(item));
-            auto target = worry_level % monkey.divisor == 0 ? monkey.target1 : monkey.target2;
-            monkeys[target].items.push_back(worry_level);
-        }
-        inspecting[monkey_id++] += monkey.items.size();
-        monkey.items.clear();
-    }
-}
-
-int_t monkey_business(std::vector<Monkey> monkeys, func_t transform, int rounds) {
-    std::vector<int_t> inspecting(monkeys.size());
-    while (rounds--) 
-        perform_round(monkeys, inspecting, transform);
-    std::vector<int_t> max2(2);
-    std::ranges::partial_sort_copy(inspecting, max2, std::greater{});
-    return std::ranges::fold_left(max2, int_t{1}, std::multiplies{});;
-}
-
 int main() {
-    std::vector<Monkey> monkeys;
+    std::vector<Monkey> data;
     for (std::string line; std::getline(std::cin, line); std::cin.get()) {
         static auto trim_after = [&line](auto chr) { return
             std::getline(std::cin, line), line.substr(line.rfind(chr) + 2); };
-        auto& monkey = monkeys.emplace_back();
+        auto& monkey = data.emplace_back();
         monkey.items = split(trim_after(':'));
         monkey.operation = op_parse(trim_after('='));
         monkey.divisor = std::stoi(trim_after('y'));
@@ -512,9 +532,12 @@ int main() {
         monkey.target2 = std::stoi(trim_after('y'));  
     }
 
-    int_t mod = std::ranges::fold_left(monkeys | std::views::transform(&Monkey::divisor), int_t{1}, std::multiplies{});
-    std::cout << monkey_business(monkeys, std::bind_back(std::divides{}, 3), 20) << '\n';
-    std::cout << monkey_business(monkeys, std::bind_back(std::modulus{}, mod), 10'000) << '\n';
+    int_t mod = std::ranges::fold_left(std::views::transform(data, &Monkey::divisor), int_t{1}, std::multiplies{});
+    MonkeysPack monkeys1(data, std::bind_back(std::divides{}, 3));
+    MonkeysPack monkeys2(data, std::bind_back(std::modulus{}, mod));
+
+    std::cout << monkeys1.monkey_business(20) << '\n';
+    std::cout << monkeys2.monkey_business(10'000) << '\n';
 }
 ```
 ---
