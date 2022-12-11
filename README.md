@@ -182,7 +182,7 @@ auto load_crates() {
                 crates[i / 4].push_back(line[i]);
             }
         }
-    } std::cin.ignore(1, '\n');
+    } 
     for (auto& crate : crates) { std::ranges::reverse(crate); }
     return crates;
 }
