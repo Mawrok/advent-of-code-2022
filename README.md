@@ -14,6 +14,7 @@ My solutions for [Advent of Code 2022](https://adventofcode.com/2022/) in C++23
 |  8  | [Treetop Tree House][8]              |
 |  9  | [Rope Bridge][9]                     |
 |  10 | [Cathode-Ray Tube][10]               |
+|  11 | [Monkey in the Middle][11]           |
 
 ## Solutions
 ### Day 1: 
@@ -432,6 +433,91 @@ int main() {
 }
 ```
 ---
+### Day 11
+```cpp
+#include <iostream>
+#include <string>
+#include <ranges>
+#include <algorithm>
+#include <vector>
+#include <functional>
+#include "utils.h"
+using int_t = unsigned long long int;
+using func_t = std::function<int_t(int_t)>;
+using func_bt = std::function<int_t(int_t, int_t)>;
+
+struct Monkey {
+    std::vector<int_t> items;
+    func_t operation;
+    int_t divisible{};
+    std::size_t target1{};
+    std::size_t target2{};
+};
+
+auto split(std::string s_nums) {
+    return s_nums
+        | std::views::split(',')
+        | std::views::transform(
+            [](auto s) -> int_t { return std::stoi(std::string(s.begin(), s.end())); })
+        | std::ranges::to<std::vector>();
+}
+
+func_t op_parse(std::string str) {
+    using namespace std::placeholders;
+    func_bt add = std::plus<int_t>();
+    func_bt mul = std::multiplies<int_t>();
+
+    auto opn = str.at(str.find(' ') + 1);
+    auto rhs = str.substr(str.rfind(' ') + 1);
+
+    auto op = opn == '+' ? add : mul;
+    if (rhs == "old")
+        return std::bind(op, _1, _1);
+    else
+        return std::bind(op, _1, std::stoi(rhs));
+}
+
+void perform_round(std::vector<Monkey>& monkeys, std::vector<int_t>& inspecting, func_t& transform) {
+    std::size_t monkey_id = 0;
+    for (auto& monkey : monkeys) {
+        for (auto& item : monkey.items) {
+            auto worry_level = transform(monkey.operation(item));
+            auto target = worry_level % monkey.divisible == 0 ? monkey.target1 : monkey.target2;
+            monkeys[target].items.push_back(worry_level);
+        }
+        inspecting[monkey_id++] += monkey.items.size();
+        monkey.items.clear();
+    }
+}
+
+int_t monkey_business(std::vector<Monkey> monkeys, func_t transform, int rounds) {
+    std::vector<int_t> inspecting(monkeys.size());
+    while (rounds--) 
+        perform_round(monkeys, inspecting, transform);
+    std::vector<int_t> max2(2);
+    std::ranges::partial_sort_copy(inspecting, max2, std::greater{});
+    return std::ranges::fold_left(max2, int_t{1}, std::multiplies{});;
+}
+
+int main() {
+    std::vector<Monkey> monkeys;
+    for (std::string line; std::getline(std::cin, line); std::cin.get()) {
+        static auto trim_after = [&line](auto chr) { return
+            std::getline(std::cin, line), line.substr(line.rfind(chr) + 2); };
+        auto& monkey = monkeys.emplace_back();
+        monkey.items = split(trim_after(':'));
+        monkey.operation = op_parse(trim_after('='));
+        monkey.divisible = std::stoi(trim_after('y'));
+        monkey.target1 = std::stoi(trim_after('y'));
+        monkey.target2 = std::stoi(trim_after('y'));  
+    }
+
+    int_t mod = std::ranges::fold_left(monkeys | std::views::transform(&Monkey::divisible), int_t{ 1 }, std::multiplies{});
+    std::cout << monkey_business(monkeys, std::bind_back(std::divides{}, 3), 20) << '\n';
+    std::cout << monkey_business(monkeys, std::bind_back(std::modulus{}, mod), 10'000) << '\n';
+}
+```
+---
 ### How to pipe
 ```
 < input.txt > output.txt
@@ -447,3 +533,4 @@ int main() {
 [8]: #day-8
 [9]: #day-9
 [10]: #day-10
+[11]: #day-11
