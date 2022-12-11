@@ -449,7 +449,7 @@ using func_bt = std::function<int_t(int_t, int_t)>;
 struct Monkey {
     std::vector<int_t> items;
     func_t operation;
-    int_t divisible{};
+    int_t divisor;
     std::size_t target1{};
     std::size_t target2{};
 };
@@ -482,7 +482,7 @@ void perform_round(std::vector<Monkey>& monkeys, std::vector<int_t>& inspecting,
     for (auto& monkey : monkeys) {
         for (auto& item : monkey.items) {
             auto worry_level = transform(monkey.operation(item));
-            auto target = worry_level % monkey.divisible == 0 ? monkey.target1 : monkey.target2;
+            auto target = worry_level % monkey.divisor == 0 ? monkey.target1 : monkey.target2;
             monkeys[target].items.push_back(worry_level);
         }
         inspecting[monkey_id++] += monkey.items.size();
@@ -507,12 +507,12 @@ int main() {
         auto& monkey = monkeys.emplace_back();
         monkey.items = split(trim_after(':'));
         monkey.operation = op_parse(trim_after('='));
-        monkey.divisible = std::stoi(trim_after('y'));
+        monkey.divisor = std::stoi(trim_after('y'));
         monkey.target1 = std::stoi(trim_after('y'));
         monkey.target2 = std::stoi(trim_after('y'));  
     }
 
-    int_t mod = std::ranges::fold_left(monkeys | std::views::transform(&Monkey::divisible), int_t{1}, std::multiplies{});
+    int_t mod = std::ranges::fold_left(monkeys | std::views::transform(&Monkey::divisor), int_t{1}, std::multiplies{});
     std::cout << monkey_business(monkeys, std::bind_back(std::divides{}, 3), 20) << '\n';
     std::cout << monkey_business(monkeys, std::bind_back(std::modulus{}, mod), 10'000) << '\n';
 }
