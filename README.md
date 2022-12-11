@@ -442,7 +442,6 @@ int main() {
 #include <vector>
 #include <functional>
 #include <cinttypes>
-#include "utils.h"
 using int_t = std::uint64_t;
 using func_t = std::function<int_t(int_t)>;
 using func_bt = std::function<int_t(int_t, int_t)>;
