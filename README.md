@@ -155,11 +155,11 @@ int main() {
     auto data = std::views::istream<std::string>(std::cin) | std::ranges::to<std::vector>();
 
     auto chunk3 = data | std::views::chunk(3);
-    auto halves = [](std::string s) { 
+    auto by_half = [](std::string s) { 
         return std::vector{ s.substr(0, s.size() / 2u), s.substr(s.size() / 2u) };};
-    auto halved = data | std::views::transform(halves);
+    auto halves = data | std::views::transform(by_half);
 
-    std::cout << value(halved) << "\n";
+    std::cout << value(halves) << "\n";
     std::cout << value(chunk3) << "\n";
 }
 ```
