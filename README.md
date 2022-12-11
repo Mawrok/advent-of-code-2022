@@ -37,7 +37,7 @@ int main() {
     std::ranges::nth_element(vec, three, std::ranges::greater{});
 
     std::cout << vec.front() << "\n";
-    std::cout << std::accumulate(vec.begin(), three, 0) << "\n";
+    std::cout << std::reduce(vec.begin(), three) << "\n";
 }
 ```
 ---
