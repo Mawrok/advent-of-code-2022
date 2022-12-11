@@ -34,7 +34,7 @@ int main() {
         }
     }
     auto three = vec.begin() + 3;
-    std::ranges::nth_element(vec, three, std::ranges::greater{});
+    std::ranges::nth_element(vec, three, std::greater{});
 
     std::cout << vec.front() << "\n";
     std::cout << std::reduce(vec.begin(), three) << "\n";
