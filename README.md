@@ -441,8 +441,8 @@ int main() {
 #include <algorithm>
 #include <vector>
 #include <functional>
-#include "utils.h"
-using int_t = unsigned long long int;
+#include <cinttypes>
+using int_t = std::uint64_t;
 using func_t = std::function<int_t(int_t)>;
 using func_bt = std::function<int_t(int_t, int_t)>;
 
