@@ -25,14 +25,12 @@ My solutions for [Advent of Code 2022](https://adventofcode.com/2022/) in C++23
 #include <numeric>
 
 int main() {
-    std::vector<int> vec;
-    int calories{};
+    std::vector<int> vec(1, 0);
     for (std::string line; std::getline(std::cin, line);) {
         if (line.empty()) {
-            vec.emplace_back(calories);
-            calories = 0;
+            vec.emplace_back(0);
         } else {
-            calories += std::stoi(line);
+            vec.back() += std::stoi(line);
         }
     }
     auto three = vec.begin() + 3;
