@@ -127,7 +127,6 @@ int main() {
 #include <ranges>
 #include <vector>
 #include <algorithm>
-#include <functional>
 #include <cctype>
 
 auto intersects(std::ranges::range auto v) {
@@ -143,7 +142,7 @@ auto intersects(std::ranges::range auto v) {
     return acc.front();
 }
 
-int value(std::ranges::view auto backsacks) {
+int acc(std::ranges::view auto backsacks) {
     auto value = [](auto chr) {return std::islower(chr) ? chr - 'a' + 1 : chr - 'A' + 27; };
     auto transformed = backsacks
         | std::views::transform([](auto c) {return intersects(c); })
@@ -153,14 +152,11 @@ int value(std::ranges::view auto backsacks) {
 
 int main() {
     auto data = std::views::istream<std::string>(std::cin) | std::ranges::to<std::vector>();
-
-    auto chunk3 = data | std::views::chunk(3);
-    auto by_half = [](std::string s) { 
-        return std::vector{ s.substr(0, s.size() / 2u), s.substr(s.size() / 2u) };};
-    auto halves = data | std::views::transform(by_half);
-
-    std::cout << value(halves) << "\n";
-    std::cout << value(chunk3) << "\n";
+    auto by_half = [](std::string s) {
+        return std::vector{ s.substr(0, s.size() / 2u), s.substr(s.size() / 2u) }; };
+        
+    std::cout << acc(std::views::transform(data, by_half)) << "\n";
+    std::cout << acc(std::views::chunk(data, 3)) << "\n";
 }
 ```
 ---
