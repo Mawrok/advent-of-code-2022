@@ -512,7 +512,7 @@ int main() {
         monkey.target2 = std::stoi(trim_after('y'));  
     }
 
-    int_t mod = std::ranges::fold_left(monkeys | std::views::transform(&Monkey::divisible), int_t{ 1 }, std::multiplies{});
+    int_t mod = std::ranges::fold_left(monkeys | std::views::transform(&Monkey::divisible), int_t{1}, std::multiplies{});
     std::cout << monkey_business(monkeys, std::bind_back(std::divides{}, 3), 20) << '\n';
     std::cout << monkey_business(monkeys, std::bind_back(std::modulus{}, mod), 10'000) << '\n';
 }
