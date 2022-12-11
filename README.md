@@ -442,6 +442,7 @@ int main() {
 #include <vector>
 #include <functional>
 #include <cinttypes>
+#include <numeric>
 using int_t = std::uint64_t;
 using func_t = std::function<int_t(int_t)>;
 using func_bt = std::function<int_t(int_t, int_t)>;
@@ -467,20 +468,16 @@ struct Monkey {
 
 struct MonkeysPack {
     std::vector<Monkey> monkeys;
-    std::vector<int_t> inspections;
-    std::vector<int_t> max2;
     func_t reduce;
 
     MonkeysPack(std::vector<Monkey>& data, func_t&& func) 
-        :monkeys(data), max2(2), inspections(data.size()), reduce(func) {}
+        :monkeys(data), reduce(func) {}
 
     int_t monkey_business(int rounds) {
         while (rounds--)
             perform_round();
-
-        std::ranges::transform(monkeys, inspections.begin(), &Monkey::inspections);
-        std::ranges::partial_sort_copy(inspections, max2, std::greater{});
-        return std::ranges::fold_left(max2, int_t{1}, std::multiplies{});;
+        std::ranges::partial_sort(monkeys, monkeys.begin() + 2, std::greater{}, &Monkey::inspections);
+        return monkeys[1].inspections * monkeys[0].inspections;
     }
 
     void perform_round() {
