@@ -470,7 +470,7 @@ struct MonkeysPack {
     std::vector<Monkey> monkeys;
     func_t reduce;
 
-    MonkeysPack(std::vector<Monkey>& data, func_t&& func) 
+    MonkeysPack(std::vector<Monkey> data, func_t&& func) 
         :monkeys(data), reduce(func) {}
 
     int_t monkey_business(int rounds) {
