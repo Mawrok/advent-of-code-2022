@@ -24,8 +24,6 @@ struct Monkey {
     int_t inspect(int_t item) {
         return ++inspections, operation(item);
     }
-
-    void throwing() { items.clear(); }
 };
 
 struct MonkeysPack {
@@ -45,12 +43,13 @@ struct MonkeysPack {
 
     void perform_round() {
         for (auto& monkey : monkeys) {
-            for (auto& item : monkey.items) {
-                auto worry_level = reduce(monkey.inspect(item));
+            while (not monkey.items.empty()) {
+                auto pop = monkey.items.back(); 
+                auto worry_level = reduce(monkey.inspect(pop));
                 auto catcher = monkey.choosing_catcher(worry_level);
                 monkeys[catcher].items.push_back(worry_level);
+                monkey.items.pop_back();
             }
-            monkey.throwing();
         }
     }
 };
