@@ -67,7 +67,7 @@ int main() {
 
 	int sum{};
 	for (int i = 1; auto pair : main | std::views::chunk(2)) { 
-		sum += (pair.front() < pair.back()) * i++;             	   sum += (p.front() < p.back()) * i;   
+		sum += (pair.front() < pair.back()) * i++;             
 	}
 
 	TreeNodeV v2 = main.emplace_back(2);
