@@ -15,7 +15,7 @@ My solutions for [Advent of Code 2022](https://adventofcode.com/2022/) in C++23
 |  9  | [Rope Bridge][9]                     |
 |  10 | [Cathode-Ray Tube][10]               |
 |  11 | [Monkey in the Middle][11]           |
-|  12 | [Hill Climbing Algorithm][12         |
+|  12 | [Hill Climbing Algorithm][12]        |
 
 ## Solutions
 ### Day 1: 
