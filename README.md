@@ -695,12 +695,12 @@ int main() {
     }
 
     TreeNodeV value2 = main.emplace_back(2);
-	TreeNodeV value6 = main.emplace_back(6);
-	auto count2 = 1 + std::ranges::count_if(main, std::bind_back(std::less{}, value2));
-	auto count6 = 1 + std::ranges::count_if(main, std::bind_back(std::less{}, value6));
+    TreeNodeV value6 = main.emplace_back(6);
+    auto count2 = 1 + std::ranges::count_if(main, std::bind_back(std::less{}, value2));
+    auto count6 = 1 + std::ranges::count_if(main, std::bind_back(std::less{}, value6));
 
-	std::cout << sum << "\n";
-	std::cout << count2 * count6 << "\n";
+    std::cout << sum << "\n";
+    std::cout << count2 * count6 << "\n";
 }
 ```
 ---
