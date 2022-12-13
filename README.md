@@ -455,22 +455,21 @@ struct Monkey {
     std::size_t inspections{};
 
     std::size_t choosing_catcher(int_t worry_level) {
-        return worry_level % divisor == 0 ? target1 : target2; 
+        return worry_level % divisor == 0 ? target1 : target2;
     }
 
-    int_t inspect(int_t item) { 
-        return ++inspections, operation(item); 
+    int_t inspect(int_t item) {
+        return ++inspections, operation(item);
     }
-
-    void throwing() { items.clear(); }
 };
 
 struct MonkeysPack {
     std::vector<Monkey> monkeys;
     func_t reduce;
 
-    MonkeysPack(std::vector<Monkey> data, func_t&& func) 
-        :monkeys(data), reduce(func) {}
+    MonkeysPack(std::vector<Monkey> data, func_t&& func)
+        :monkeys(data), reduce(func) {
+    }
 
     int_t monkey_business(int rounds) {
         while (rounds--)
@@ -481,12 +480,13 @@ struct MonkeysPack {
 
     void perform_round() {
         for (auto& monkey : monkeys) {
-            for (auto& item : monkey.items) {
-                auto worry_level = reduce(monkey.inspect(item));
+            while (not monkey.items.empty()) {
+                auto pop = monkey.items.back(); 
+                auto worry_level = reduce(monkey.inspect(pop));
                 auto catcher = monkey.choosing_catcher(worry_level);
                 monkeys[catcher].items.push_back(worry_level);
+                monkey.items.pop_back();
             }
-            monkey.throwing();
         }
     }
 };
@@ -524,10 +524,10 @@ int main() {
         monkey.operation = op_parse(trim_after('='));
         monkey.divisor = std::stoi(trim_after('y'));
         monkey.target1 = std::stoi(trim_after('y'));
-        monkey.target2 = std::stoi(trim_after('y'));  
+        monkey.target2 = std::stoi(trim_after('y'));
     }
 
-    int_t mod = std::ranges::fold_left(std::views::transform(data, &Monkey::divisor), int_t{1}, std::multiplies{});
+    int_t mod = std::ranges::fold_left(std::views::transform(data, &Monkey::divisor), int_t{ 1 }, std::multiplies{});
     MonkeysPack monkeys1(data, std::bind_back(std::divides{}, 3));
     MonkeysPack monkeys2(data, std::bind_back(std::modulus{}, mod));
 
