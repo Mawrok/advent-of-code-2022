@@ -6,7 +6,7 @@
 #include <vector>
 #include <ranges>
 #include <iterator>
-#include <cctype>
+#include <functional>
 
 struct TreeNodeV : public std::variant<int, std::vector<TreeNodeV>> {
     using vec = std::vector<TreeNodeV>;
@@ -70,12 +70,11 @@ int main() {
         sum += (pair.front() < pair.back()) * i++;           
     }
 
-    TreeNodeV v2 = main.emplace_back(2);
-    TreeNodeV v6 = main.emplace_back(6);
-    std::ranges::sort(main);
-    auto pos2 = 1 + std::distance(main.begin(), std::ranges::lower_bound(main, v2));
-    auto pos6 = 1 + std::distance(main.begin(), std::ranges::lower_bound(main, v6));
+    TreeNodeV value2 = main.emplace_back(2);
+	TreeNodeV value6 = main.emplace_back(6);
+	auto count2 = 1 + std::ranges::count_if(main, std::bind_back(std::less{}, value2));
+	auto count6 = 1 + std::ranges::count_if(main, std::bind_back(std::less{}, value6));
 
-    std::cout << sum << "\n";
-    std::cout << pos2 * pos6 << "\n";
+	std::cout << sum << "\n";
+	std::cout << count2 * count6 << "\n";
 }
