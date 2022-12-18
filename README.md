@@ -725,67 +725,67 @@ int main() {
 #include <unordered_set>
 
 struct Vector3 {
-	int x, y, z;
-	bool operator== (Vector3 const&) const = default;
-	Vector3 operator+ (Vector3 const& v) const { return { x + v.x, y + v.y, z + v.z }; }
+    int x, y, z;
+    bool operator== (Vector3 const&) const = default;
+    Vector3 operator+ (Vector3 const& v) const { return { x + v.x, y + v.y, z + v.z }; }
 };
 
 struct Vector3hash {
-	auto operator() (Vector3 const& v) const {
-		return 10000 * v.z + 100 * v.y + v.z;
-	}
+    auto operator() (Vector3 const& v) const {
+        return 10000 * v.z + 100 * v.y + v.z;
+    }
 };
 
 int main() {
-	std::unordered_set<Vector3, Vector3hash> cubes;
-	char ctmp;
-	for (Vector3 tmp; std::cin >> tmp.x >> ctmp >> tmp.y >> ctmp >> tmp.z; ) {
-		cubes.emplace(tmp + Vector3{1, 1, 1});
-	}
+    std::unordered_set<Vector3, Vector3hash> cubes;
+    char ctmp;
+    for (Vector3 tmp; std::cin >> tmp.x >> ctmp >> tmp.y >> ctmp >> tmp.z; ) {
+        cubes.emplace(tmp + Vector3{1, 1, 1});
+    }
 
-	std::vector<Vector3> dirs {
-		{1, 0, 0}, {-1, 0, 0},
-		{0, 1, 0}, {0, -1, 0},
-		{0, 0, 1}, {0, 0, -1}
-	};
+    std::vector<Vector3> dirs {
+        {1, 0, 0}, {-1, 0, 0},
+        {0, 1, 0}, {0, -1, 0},
+        {0, 0, 1}, {0, 0, -1}
+    };
 
-	std::size_t exposed1{};
-	for (auto& cube : cubes) {
-		for (auto& dir : dirs) {
-			exposed1 += not cubes.contains(cube + dir);
-		}
-	}
+    std::size_t exposed1{};
+    for (auto& cube : cubes) {
+        for (auto& dir : dirs) {
+            exposed1 += not cubes.contains(cube + dir);
+        }
+    }
 
-	auto in_bounds = [](Vector3 const& pos) {
-		return  pos.x >= 0 and pos.x < 29
-			and pos.y >= 0 and pos.y < 29
-			and pos.z >= 0 and pos.z < 29;
-	};
+    auto in_bounds = [](Vector3 const& pos) {
+        return  pos.x >= 0 and pos.x < 29
+            and pos.y >= 0 and pos.y < 29
+            and pos.z >= 0 and pos.z < 29;
+    };
 
-	int exposed2{};
-	std::queue<Vector3> outside;
-	std::unordered_set<Vector3, Vector3hash> visited;
-	outside.emplace(0, 0, 0);
-	while (not outside.empty()) {
-		auto curr = outside.front(); outside.pop();
+    int exposed2{};
+    std::queue<Vector3> outside;
+    std::unordered_set<Vector3, Vector3hash> visited;
+    outside.emplace(0, 0, 0);
+    while (not outside.empty()) {
+        auto curr = outside.front(); outside.pop();
 
-		if (visited.contains(curr) or cubes.contains(curr)) {
-			continue;
-		}
+        if (visited.contains(curr) or cubes.contains(curr)) {
+            continue;
+        }
 
-		visited.emplace(curr);
+        visited.emplace(curr);
 
-		for (auto& dir : dirs) {
-			Vector3 next = curr + dir;
-			exposed2 += cubes.contains(next);
-			if (in_bounds(next)) {
-				outside.push(next);
-			}
-		}
-	}
+        for (auto& dir : dirs) {
+            Vector3 next = curr + dir;
+            exposed2 += cubes.contains(next);
+            if (in_bounds(next)) {
+                outside.push(next);
+            }
+        }
+    }
 
-	std::cout << exposed1 << "\n";
-	std::cout << exposed2 << "\n";
+    std::cout << exposed1 << "\n";
+    std::cout << exposed2 << "\n";
 }
 ```
 ---
