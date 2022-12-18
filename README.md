@@ -762,7 +762,7 @@ int main() {
             and pos.z >= 0 and pos.z < 29;
     };
 
-    int exposed2{};
+    std::size_t exposed2{};
     std::queue<Vector3> outside;
     std::unordered_set<Vector3, Vector3hash> visited;
     outside.emplace(0, 0, 0);
